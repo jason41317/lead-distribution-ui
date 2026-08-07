@@ -1,10 +1,15 @@
-import { LayoutDashboard, Users, GitBranch, Inbox } from "lucide-react";
+import { LayoutDashboard, Users, GitBranch, Inbox, Form } from "lucide-react";
 
 export const navigation = [
   {
     title: "Dashboard",
     href: "/",
     icon: LayoutDashboard,
+  },
+  {
+    title: "Lead Form",
+    href: "/forms",
+    icon: Form,
   },
   {
     title: "Brokers",

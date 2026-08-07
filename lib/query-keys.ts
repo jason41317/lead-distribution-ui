@@ -5,8 +5,16 @@ export const queryKeys = {
     detail: (id: number) => [...queryKeys.brokers.all, id] as const,
   },
 
+  forms: {
+    all: ["forms"] as const,
+    list: () => [...queryKeys.forms.all] as const,
+    detail: (id: number) => [...queryKeys.forms.all, id] as const,
+  },
+
   leads: {
     all: ["leads"] as const,
+    list: () => [...queryKeys.leads.all] as const,
+    detail: (id: number) => [...queryKeys.leads.all, id] as const,
   },
 
   distributions: {
