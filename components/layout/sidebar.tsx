@@ -19,7 +19,7 @@ export default function AppSidebar() {
         collapsed ? "w-20" : "w-64",
       )}
     >
-      <div className="border-b p-5 h-16">
+      <div className="border-b p-5 h-16 flex">
         <h2 className="text-xl font-semibold"><span className={cn(collapsed && "hidden")}>Lead Distribution</span></h2>
         <SidebarToggle />
       </div>
