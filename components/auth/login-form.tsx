@@ -50,7 +50,7 @@ export default function LoginForm() {
 
       toast.success("Welcome back!");
 
-      router.push("/dashboard");
+      router.push("/");
     } catch (error: any) {
       toast.error(error.response?.data?.message ?? "Login failed.");
     }

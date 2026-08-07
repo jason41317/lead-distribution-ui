@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { navigation } from "./navigation";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "@/providers/sidebar-provider";
+import SidebarToggle from "./sidebar-toggle";
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -18,8 +19,9 @@ export default function AppSidebar() {
         collapsed ? "w-20" : "w-64",
       )}
     >
-      <div className="border-b p-6">
-        <h2 className="text-xl font-semibold">Lead Distribution</h2>
+      <div className="border-b p-5 h-16">
+        <h2 className="text-xl font-semibold"><span className={cn(collapsed && "hidden")}>Lead Distribution</span></h2>
+        <SidebarToggle />
       </div>
 
       <nav className="space-y-1 p-4">
@@ -37,6 +39,7 @@ export default function AppSidebar() {
                 active
                   ? "bg-primary text-primary-foreground"
                   : "hover:bg-muted",
+                collapsed && "justify-center",
               )}
             >
               <Icon className="h-4 w-4" />
