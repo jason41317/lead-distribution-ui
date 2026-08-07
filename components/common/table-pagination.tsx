@@ -27,7 +27,7 @@ export default function TablePagination({
     <div className="absolute bottom-0 py-2 rounded-lg sticky bg-white flex justify-between items-center px-5">
       <div className="w-1/2">
         <div className="flex w-fit items-center justify-center text-sm font-medium">
-          {`Page ${currentPage} of ${meta.totalPages}`}
+          {`Page ${meta.total == 0 ? 0 : currentPage} of ${meta.totalPages}`}
         </div>
       </div>
       <div>

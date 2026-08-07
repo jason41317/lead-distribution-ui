@@ -2,11 +2,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { leadApi } from "../api/lead";
 import { LeadFormValues } from "../schemas/lead";
 import { queryKeys } from "@/lib/query-keys";
+import { LeadFilters } from "../types/lead";
 
-export function useLeads() {
+export function useLeads(filters: LeadFilters) {
   return useQuery({
-    queryKey: queryKeys.leads.list(),
-    queryFn: () => leadApi.list(),
+    queryKey: queryKeys.leads.list(filters),
+    queryFn: () => leadApi.list(filters),
   });
 }
 

@@ -1,13 +1,17 @@
 import api, { unwrap } from "@/lib/api-client";
 
-import { Lead } from "../types/lead";
+import { Lead, LeadFilters } from "../types/lead";
 import { ApiResponse, PaginatedResponse } from "@/types/api";
 import { LeadFormValues } from "../schemas/lead";
 
 export const leadApi = {
-  list() {
-    return unwrap(api.get<ApiResponse<PaginatedResponse<Lead>>>("/leads"));
-  },
+  list(params?: LeadFilters) {
+      const url = params
+        ? `/leads?${new URLSearchParams(params as Record<string, any>).toString()}`
+        : "/leads";
+  
+      return unwrap(api.get<ApiResponse<PaginatedResponse<Lead>>>(url));
+    },
 
   create(data: LeadFormValues) {
     return unwrap(api.post<ApiResponse<Lead>>("/leads", data));

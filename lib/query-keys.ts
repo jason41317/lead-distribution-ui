@@ -13,7 +13,7 @@ export const queryKeys = {
 
   leads: {
     all: ["leads"] as const,
-    list: () => [...queryKeys.leads.all] as const,
+    list: (filters?: unknown) => [...queryKeys.leads.all, filters] as const,
     detail: (id: number) => [...queryKeys.leads.all, id] as const,
   },
 
