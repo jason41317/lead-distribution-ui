@@ -19,5 +19,7 @@ export const queryKeys = {
 
   distributions: {
     all: ["distributions"] as const,
+    list: () => [...queryKeys.distributions.all] as const,
+    detail: (id: number) => [...queryKeys.distributions.all, id] as const,
   },
 };

@@ -3,10 +3,11 @@ import { formApi } from "../api/form";
 import { FormFormValues } from "../schemas/form";
 import { queryKeys } from "@/lib/query-keys";
 
-export function useForms() {
+export function useForms(enabled = true) {
   return useQuery({
     queryKey: queryKeys.forms.list(),
     queryFn: () => formApi.list(),
+    enabled
   });
 }
 

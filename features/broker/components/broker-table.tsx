@@ -70,6 +70,8 @@ export default function BrokerTable({ search, onEdit, onDelete }: Props) {
               <TableHead className="p-4 text-left">
                 Distribution Hours
               </TableHead>
+              <TableHead className="w-10">
+              </TableHead>
             </TableRow>
           </TableHeader>
 

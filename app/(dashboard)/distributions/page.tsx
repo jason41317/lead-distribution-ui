@@ -4,107 +4,135 @@ import { useState } from "react";
 
 import { PageContainer, PageHeader } from "@/components/common";
 
-import FormTable from "@/features/form/components/form-table";
-import FormDialog from "@/features/form/components/form-dialog";
+import DistributionTable from "@/features/distribution/components/distribution-table";
+import DistributionDialog from "@/features/distribution/components/distribution-dialog";
 import {
-  Form,
-  FormFormValues,
-  useCreateForm,
-  useDeleteForm,
-  useUpdateForm,
-} from "@/features/form";
+  Distribution,
+  DistributionFormValues,
+  useCreateDistribution,
+  useDeleteDistribution,
+  useShowDistribution,
+  useUpdateDistribution,
+} from "@/features/distribution";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/dialog/confirm-dialog";
-import FormToolBar from "@/features/form/components/form-toolbar";
+import DistributionToolBar from "@/features/distribution/components/distribution-toolbar";
+import { useForms } from "@/features/form";
+import { useBrokers } from "@/features/broker";
 
 export default function DistributionPage() {
   const [open, setOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const [selectedForm, setSelectedForm] = useState<Form | undefined>();
+  const [selectedDistribution, setSelectedDistribution] = useState<
+    Distribution | undefined
+  >();
 
-  const createForm = useCreateForm();
-  const updateForm = useUpdateForm();
-  const deleteForm = useDeleteForm();
+  const [selectedDistributionId, setSelectedDistributionId] =
+    useState<number>(0);
 
-  const handleCreate = () => {
-    setSelectedForm(undefined);
+  const createDistribution = useCreateDistribution();
+  const updateDistribution = useUpdateDistribution();
+  const deleteDistribution = useDeleteDistribution();
+  const {
+    data: distributionData,
+    refetch: refetchDistribution,
+    isFetching: isFetchingDistribution,
+  } = useShowDistribution(selectedDistributionId);
+
+  const { data: brokers } = useBrokers({});
+
+  const { data: forms, refetch, isFetching } = useForms(false);
+
+  const handleCreate = async () => {
+    const { data } = await refetch();
+    const d: any = data?.data;
+    if (!d.length) {
+      toast.error("Oops, please create a form first.");
+      return;
+    }
+    setSelectedDistribution(undefined);
     setOpen(true);
   };
 
-  const handleEdit = (form: Form) => {
-    setSelectedForm(form);
+  const handleEdit = async (distribution: Distribution) => {
+    setSelectedDistributionId(distribution.id);
+    const { data } = await refetchDistribution();
+    await refetch();
+    // console.log(distributionData);
+    setSelectedDistribution(data?.data);
     setOpen(true);
   };
 
-  const handleDelete = (form: Form) => {
-    setSelectedForm(form);
+  const handleDelete = (distribution: Distribution) => {
+    setSelectedDistribution(distribution);
     setDeleteOpen(true);
   };
 
-  const handleSubmit = (values: FormFormValues) => {
-    if (selectedForm) {
-      updateForm.mutate(
+  const handleSubmit = (values: DistributionFormValues) => {
+    if (selectedDistribution) {
+      updateDistribution.mutate(
         {
-          id: selectedForm.id,
+          id: selectedDistribution.id,
           data: values,
         },
         {
           onSuccess() {
-            toast.success("Form updated successfully.");
+            toast.success("Distribution updated successfully.");
+            setOpen(false);
           },
         },
       );
     } else {
-      createForm.mutate(values, {
+      createDistribution.mutate(values, {
         onSuccess() {
-          toast.success("Form created successfully.");
+          toast.success("Distribution created successfully.");
+          setOpen(false);
         },
         onError: (error: any) => {
-          toast.error(error?.response?.data?.message ?? error?.message ?? "An error occurred.");
+          toast.error(
+            error?.response?.data?.message ??
+              error?.message ??
+              "An error occurred.",
+          );
         },
       });
     }
-
-    setOpen(false);
   };
 
   return (
     <PageContainer>
-      <PageHeader title="Forms" description="Manage forms." />
+      <PageHeader title="Distributions" description="Manage distributions." />
 
-      <FormToolBar
-        onAdd={() => handleCreate()}
-      />
+      <DistributionToolBar onAdd={() => handleCreate()} />
 
-      <FormTable
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <DistributionTable onEdit={handleEdit} onDelete={handleDelete} />
 
-      <FormDialog
-        open={open}
-        form={selectedForm}
-        loading={createForm.isPending}
+      <DistributionDialog
+        open={open && !isFetchingDistribution}
+        distribution={selectedDistribution}
+        loading={createDistribution.isPending}
         onOpenChange={setOpen}
         onSubmit={handleSubmit}
+        forms={(forms?.data as any) ?? []}
+        brokers={brokers?.data.items ?? []}
       />
 
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title="Delete Form"
-        description={`Are you sure you want to delete "${selectedForm?.name}"?`}
+        title="Delete Distribution"
+        description={`Are you sure you want to delete "${selectedDistribution?.name}"?`}
         confirmText="Delete"
-        loading={deleteForm.isPending}
+        loading={deleteDistribution.isPending}
         onConfirm={() => {
-          if (!selectedForm) return;
+          if (!selectedDistribution) return;
 
-          deleteForm.mutate(selectedForm.id, {
+          deleteDistribution.mutate(selectedDistribution.id, {
             onSuccess: () => {
-              // setSelectedForm(undefined);
+              // setSelectedDistribution(undefined);
               setDeleteOpen(false);
-              toast.success("Form deleted successfully.");
+              toast.success("Distribution deleted successfully.");
             },
           });
         }}
