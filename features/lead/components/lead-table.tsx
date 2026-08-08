@@ -19,18 +19,25 @@ import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { LeadFormValues } from "../schemas/lead";
 import { LeadRowActions } from "./lead-actions";
+import { LeadStatusBadge } from "./lead-status-badge";
 
 interface Props {
-  search: string;
+  search?: string;
+  brokerId?: string;
+  formId?: string;
+  status?: string;
   onEdit: (lead: Lead) => void;
-  onDelete: (lead: Lead) => void;
+  showAction?: boolean;
 }
 
-export default function LeadTable({ search, onEdit, onDelete }: Props) {
+export default function LeadTable({ search, brokerId, formId, status, onEdit, showAction = true }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data, isLoading, error } = useLeads({
     search,
+    brokerId,
+    formId,
+    status,
     page: currentPage,
     limit: 10,
   });
@@ -74,19 +81,19 @@ export default function LeadTable({ search, onEdit, onDelete }: Props) {
                   </span>
                 </TableCell>
                 <TableCell className="p-4">
-                  <span className="flex flex-col gap-1">
-                    <span className="">{lead.status}</span>
-                    <span className="">{lead.form?.name}</span>
-                    <span className="">{lead.broker?.name ?? "N/A"}</span>
+                  <span className="flex flex-col gap-1 justify-center items-start">
+                    {/* <span className="border">{lead.status}</span> */}
+                    <span className="">Lead Form : {lead.form?.name}</span>
+                    <span className="">Broker : {lead.broker?.name ?? "N/A"}</span>
+                    <LeadStatusBadge status={lead.status} />
                   </span>
                 </TableCell>
 
                 <TableCell className="p-4 font-bold">
-                  {lead.status == "unsent" ? (
+                  {showAction && lead.status == "unsent" ? (
                     <LeadRowActions
                       lead={lead}
                       onEdit={onEdit}
-                      onDelete={onDelete}
                     />
                   ) : null}
                 </TableCell>

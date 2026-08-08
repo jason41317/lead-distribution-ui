@@ -15,16 +15,12 @@ import { Lead } from "../types/lead";
 
 interface LeadRowActionsProps {
   lead: Lead;
-
   onEdit: (lead: Lead) => void;
-
-  onDelete: (lead: Lead) => void;
 }
 
 export function LeadRowActions({
   lead,
   onEdit,
-  onDelete,
 }: LeadRowActionsProps) {
   return (
     <DropdownMenu>

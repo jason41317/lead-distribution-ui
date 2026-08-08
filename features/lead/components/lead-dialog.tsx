@@ -10,6 +10,8 @@ import {
 // import LeadForm from "./lead-form";
 import { Lead } from "../types/lead";
 import { LeadFormValues } from "../schemas/lead";
+import { Broker } from "@/features/broker";
+import LeadForm from "./lead-form";
 
 interface LeadDialogProps {
   open: boolean;
@@ -18,6 +20,7 @@ interface LeadDialogProps {
 
   onOpenChange: (open: boolean) => void;
   onSubmit: (values: LeadFormValues) => void;
+  brokers: Broker[]
 }
 
 export default function LeadDialog({
@@ -26,6 +29,7 @@ export default function LeadDialog({
   loading,
   onOpenChange,
   onSubmit,
+  brokers
 }: LeadDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -34,11 +38,12 @@ export default function LeadDialog({
           <DialogTitle>{lead ? "Edit Lead" : "Add Lead"}</DialogTitle>
         </DialogHeader>
 
-        {/* <LeadForm
+        <LeadForm
           loading={loading}
           defaultValues={lead as LeadFormValues}
           onSubmit={onSubmit}
-        /> */}
+          brokers={brokers}
+        />
       </DialogContent>
     </Dialog>
   );

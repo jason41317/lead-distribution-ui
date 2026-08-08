@@ -17,9 +17,10 @@ import { FormRowActions } from "./form-actions";
 interface Props {
   onEdit: (form: Form) => void;
   onDelete: (form: Form) => void;
+  onPreview: (form: Form) => void;
 }
 
-export default function FormTable({ onEdit, onDelete }: Props) {
+export default function FormTable({ onEdit, onDelete, onPreview }: Props) {
   const { data, isLoading, error } = useForms();
 
   if (isLoading) {
@@ -67,6 +68,7 @@ export default function FormTable({ onEdit, onDelete }: Props) {
                     form={form}
                     onEdit={onEdit}
                     onDelete={onDelete}
+                    onPreview={onPreview}
                   />
                 </TableCell>
               </TableRow>

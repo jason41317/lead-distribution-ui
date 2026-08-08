@@ -17,6 +17,7 @@ import {
 } from "@/features/broker";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/dialog/confirm-dialog";
+import BrokerLeadDialog from "@/features/broker/components/broker-lead-dialog";
 
 export default function BrokersPage() {
   const [search, setSearch] = useState<string>("");
@@ -24,12 +25,18 @@ export default function BrokersPage() {
 
   const [open, setOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [leadOpen, setLeadOpen] = useState(false);
 
   const [selectedBroker, setSelectedBroker] = useState<Broker | undefined>();
 
   const createBroker = useCreateBroker();
   const updateBroker = useUpdateBroker();
   const deleteBroker = useDeleteBroker();
+
+  const handleViewLeads = (broker: Broker) => {
+    setSelectedBroker(broker);
+    setLeadOpen(true);
+  };
 
   const handleCreate = () => {
     setSelectedBroker(undefined);
@@ -81,6 +88,7 @@ export default function BrokersPage() {
       />
 
       <BrokerTable
+        onViewLeads={handleViewLeads}
         onEdit={handleEdit}
         onDelete={handleDelete}
         search={debouncedSearch}
@@ -92,6 +100,12 @@ export default function BrokersPage() {
         loading={createBroker.isPending}
         onOpenChange={setOpen}
         onSubmit={handleSubmit}
+      />
+
+      <BrokerLeadDialog
+        open={leadOpen}
+        onOpenChange={setLeadOpen}
+        broker={selectedBroker}
       />
 
       <ConfirmDialog

@@ -19,13 +19,22 @@ import { ConfirmDialog } from "@/components/dialog/confirm-dialog";
 import DistributionToolBar from "@/features/distribution/components/distribution-toolbar";
 import { useForms } from "@/features/form";
 import { useBrokers } from "@/features/broker";
+import DistributionLeadDialog from "@/features/distribution/components/distribution-lead-dialog";
+import { Lead, LeadFormValues, useUpdateLead } from "@/features/lead";
+import LeadDialog from "@/features/lead/components/lead-dialog";
 
 export default function DistributionPage() {
   const [open, setOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [leadOpen, setLeadOpen] = useState(false);
+  const [leadDialogOpen, setLeadDialogOpen] = useState(false);
 
   const [selectedDistribution, setSelectedDistribution] = useState<
     Distribution | undefined
+  >();
+
+  const [selectedLead, setSelectedLead] = useState<
+    Lead | undefined
   >();
 
   const [selectedDistributionId, setSelectedDistributionId] =
@@ -44,6 +53,13 @@ export default function DistributionPage() {
 
   const { data: forms, refetch, isFetching } = useForms(false);
 
+  const updateLead = useUpdateLead();
+
+  const handleViewLeads = (distribution: Distribution) => {
+    setSelectedDistribution(distribution);
+    setLeadOpen(true);
+  };
+
   const handleCreate = async () => {
     const { data } = await refetch();
     const d: any = data?.data;
@@ -57,11 +73,13 @@ export default function DistributionPage() {
 
   const handleEdit = async (distribution: Distribution) => {
     setSelectedDistributionId(distribution.id);
-    const { data } = await refetchDistribution();
     await refetch();
+    const { data } = await refetchDistribution();
+    
     // console.log(distributionData);
     setSelectedDistribution(data?.data);
-    setOpen(true);
+
+    setTimeout(() => setOpen(true), 0); 
   };
 
   const handleDelete = (distribution: Distribution) => {
@@ -100,13 +118,44 @@ export default function DistributionPage() {
     }
   };
 
+  const handleLeadEdit = (lead: Lead) => {
+    setSelectedLead(lead);
+    setLeadDialogOpen(true);
+  };
+
+  const handleLeadSubmit = (values: LeadFormValues) => {
+    if (selectedLead) {
+      updateLead.mutate(
+        {
+          id: selectedLead.id,
+          data: values,
+        },
+        {
+          onSuccess() {
+            toast.success("Lead updated successfully.");
+          },
+        },
+      );
+    }
+
+    setLeadDialogOpen(false);
+  };
+
   return (
     <PageContainer>
       <PageHeader title="Distributions" description="Manage distributions." />
 
       <DistributionToolBar onAdd={() => handleCreate()} />
 
-      <DistributionTable onEdit={handleEdit} onDelete={handleDelete} />
+      <DistributionTable onViewLeads={handleViewLeads} onEdit={handleEdit} onDelete={handleDelete} />
+
+      <LeadDialog 
+        open={leadDialogOpen}
+        lead={selectedLead}
+        onOpenChange={setLeadDialogOpen}
+        onSubmit={handleLeadSubmit}
+        brokers={brokers?.data.items ?? []}
+      />
 
       <DistributionDialog
         open={open && !isFetchingDistribution}
@@ -116,6 +165,13 @@ export default function DistributionPage() {
         onSubmit={handleSubmit}
         forms={(forms?.data as any) ?? []}
         brokers={brokers?.data.items ?? []}
+      />
+
+      <DistributionLeadDialog 
+        formId={String(selectedDistribution?.formId)}
+        onEdit={handleLeadEdit}
+        open={leadOpen}
+        onOpenChange={setLeadOpen}
       />
 
       <ConfirmDialog

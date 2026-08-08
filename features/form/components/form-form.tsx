@@ -20,7 +20,7 @@ export default function FormForm({
   loading,
   onSubmit,
 }: FormFormProps) {
-  const form = useForm<FormFormValues>({
+  const { watch, ...form } = useForm<FormFormValues>({
     resolver: zodResolver(formSchema),
 
     defaultValues: {
@@ -38,6 +38,13 @@ export default function FormForm({
     }
   }, [defaultValues]);
 
+  const name = watch('name')
+
+  useEffect(() => {
+    const slug = name.toLowerCase().replace(/\s+/g, '-'); 
+    form.setValue("slug", slug)
+  }, [name])
+
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
       <FormInput
@@ -53,7 +60,7 @@ export default function FormForm({
         name="slug"
         label="Slug"
         placeholder="Slug"
-        required
+        disabled
       />
       <Button type="submit" disabled={loading} className="w-full">
         Save Form

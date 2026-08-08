@@ -24,9 +24,10 @@ interface Props {
   search: string;
   onEdit: (broker: Broker) => void;
   onDelete: (broker: Broker) => void;
+  onViewLeads: (broker: Broker) => void;
 }
 
-export default function BrokerTable({ search, onEdit, onDelete }: Props) {
+export default function BrokerTable({ search, onViewLeads, onEdit, onDelete }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data, isLoading, error } = useBrokers({
@@ -119,6 +120,7 @@ export default function BrokerTable({ search, onEdit, onDelete }: Props) {
                 <TableCell className="p-4 font-bold">
                   <BrokerRowActions
                     broker={broker}
+                    onViewLeads={onViewLeads}
                     onEdit={onEdit}
                     onDelete={onDelete}
                   />

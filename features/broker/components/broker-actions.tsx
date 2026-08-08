@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -15,9 +15,8 @@ import { Broker } from "../types/broker";
 
 interface BrokerRowActionsProps {
   broker: Broker;
-
+  onViewLeads: (broker: Broker) => void;
   onEdit: (broker: Broker) => void;
-
   onDelete: (broker: Broker) => void;
 }
 
@@ -25,6 +24,7 @@ export function BrokerRowActions({
   broker,
   onEdit,
   onDelete,
+  onViewLeads
 }: BrokerRowActionsProps) {
   return (
     <DropdownMenu>
@@ -35,6 +35,11 @@ export function BrokerRowActions({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-40">
+        <DropdownMenuItem onClick={() => onViewLeads(broker)}>
+          <Eye className="mr-2 h-4 w-4" />
+          View Leads
+        </DropdownMenuItem>
+
         <DropdownMenuItem onClick={() => onEdit(broker)}>
           <Pencil className="mr-2 h-4 w-4" />
           Edit

@@ -9,6 +9,7 @@ export interface Lead {
   ipAddress: string;
   formId: number;
   form?: Form;
+  brokerId: number;
   broker?: Broker;
   status: string;
   createdAt: string;
@@ -19,4 +20,7 @@ export interface LeadFilters {
   page?: number;
   limit?: number;
   search?: string;
+  brokerId?: string;
+  formId?: string;
+  status?: string;
 }

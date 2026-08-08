@@ -17,10 +17,14 @@ import {
 } from "@/features/lead";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/dialog/confirm-dialog";
+import { useBrokers } from "@/features/broker";
 
 export default function LeadsPage() {
   const [search, setSearch] = useState<string>("");
   const debouncedSearch = useDebounce(search, 500);
+
+  const [brokerId, setBrokerId] = useState<string>("");
+  const [status, setStatus] = useState<string>("");
 
   const [open, setOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -30,6 +34,7 @@ export default function LeadsPage() {
   const createLead = useCreateLead();
   const updateLead = useUpdateLead();
   const deleteLead = useDeleteLead();
+  const { data: brokers } = useBrokers({})
 
   const handleCreate = () => {
     setSelectedLead(undefined);
@@ -75,15 +80,20 @@ export default function LeadsPage() {
       <PageHeader title="Leads" description="Manage lead accounts." />
 
       <LeadToolbar
+        brokerId={brokerId}
+        onBrokerIdChange={setBrokerId}
+        brokers={brokers?.data.items ?? []}
         search={search}
         onSearchChange={setSearch}
-        onAdd={() => handleCreate()}
+        status={status}
+        onStatusChange={setStatus}
       />
 
       <LeadTable
         onEdit={handleEdit}
-        onDelete={handleDelete}
         search={debouncedSearch}
+        brokerId={brokerId}
+        status={status}
       />
 
       <LeadDialog
@@ -92,6 +102,7 @@ export default function LeadsPage() {
         loading={createLead.isPending}
         onOpenChange={setOpen}
         onSubmit={handleSubmit}
+        brokers={brokers?.data.items ?? []}
       />
 
       <ConfirmDialog

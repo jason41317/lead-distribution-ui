@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -15,14 +15,14 @@ import { Form } from "../types/form";
 
 interface BrokerRowActionsProps {
   form: Form;
-
+  onPreview: (form: Form) => void;
   onEdit: (form: Form) => void;
-
   onDelete: (form: Form) => void;
 }
 
 export function FormRowActions({
   form,
+  onPreview,
   onEdit,
   onDelete,
 }: BrokerRowActionsProps) {
@@ -35,6 +35,11 @@ export function FormRowActions({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-40">
+        <DropdownMenuItem onClick={() => onPreview(form)}>
+          <Eye className="mr-2 h-4 w-4" />
+          Preview
+        </DropdownMenuItem>
+
         <DropdownMenuItem onClick={() => onEdit(form)}>
           <Pencil className="mr-2 h-4 w-4" />
           Edit

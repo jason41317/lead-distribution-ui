@@ -15,11 +15,12 @@ import {
 import { DistributionRowActions } from "./distribution-actions";
 
 interface Props {
+  onViewLeads: (distribution: Distribution) => void;
   onEdit: (distribution: Distribution) => void;
   onDelete: (distribution: Distribution) => void;
 }
 
-export default function FormTable({ onEdit, onDelete }: Props) {
+export default function FormTable({ onEdit, onViewLeads, onDelete }: Props) {
   const { data, isLoading, error } = useDistributions();
 
   if (isLoading) {
@@ -65,6 +66,7 @@ export default function FormTable({ onEdit, onDelete }: Props) {
                 <TableCell className="p-4 font-bold">
                   <DistributionRowActions
                     distribution={distribution}
+                    onViewLeads={onViewLeads}
                     onEdit={onEdit}
                     onDelete={onDelete}
                   />

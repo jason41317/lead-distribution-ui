@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -15,9 +15,8 @@ import { Distribution } from "../types/distribution";
 
 interface BrokerRowActionsProps {
   distribution: Distribution;
-
+  onViewLeads: (distribution: Distribution) => void;
   onEdit: (distribution: Distribution) => void;
-
   onDelete: (distribution: Distribution) => void;
 }
 
@@ -25,6 +24,7 @@ export function DistributionRowActions({
   distribution,
   onEdit,
   onDelete,
+  onViewLeads
 }: BrokerRowActionsProps) {
   return (
     <DropdownMenu>
@@ -35,6 +35,11 @@ export function DistributionRowActions({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-40">
+        <DropdownMenuItem onClick={() => onViewLeads(distribution)}>
+          <Eye className="mr-2 h-4 w-4" />
+          View Leads
+        </DropdownMenuItem>
+
         <DropdownMenuItem onClick={() => onEdit(distribution)}>
           <Pencil className="mr-2 h-4 w-4" />
           Edit

@@ -9,7 +9,10 @@ export const LeadSchema = z.object({
   }),
   phone: z.string().min(1, {
     message: "Please input a valid Phone Number",
-  })
+  }),
+  brokerId: z.number().optional(),
+  formId: z.number().optional(),
+  ipAddress: z.string().optional()
 });
 
 export type LeadFormValues = z.infer<typeof LeadSchema>;

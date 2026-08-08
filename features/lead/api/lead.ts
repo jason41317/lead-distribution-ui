@@ -6,12 +6,19 @@ import { LeadFormValues } from "../schemas/lead";
 
 export const leadApi = {
   list(params?: LeadFilters) {
-      const url = params
-        ? `/leads?${new URLSearchParams(params as Record<string, any>).toString()}`
-        : "/leads";
-  
-      return unwrap(api.get<ApiResponse<PaginatedResponse<Lead>>>(url));
-    },
+    const cleanParams = params
+      ? Object.fromEntries(
+          Object.entries(params).filter(
+            ([_, v]) => v !== undefined && v !== null,
+          ),
+        )
+      : {};
+    const url = cleanParams
+      ? `/leads?${new URLSearchParams(cleanParams as Record<string, any>).toString()}`
+      : "/leads";
+
+    return unwrap(api.get<ApiResponse<PaginatedResponse<Lead>>>(url));
+  },
 
   create(data: LeadFormValues) {
     return unwrap(api.post<ApiResponse<Lead>>("/leads", data));
@@ -32,5 +39,4 @@ export const leadApi = {
   // getBySlug(slug: string) {
   //   return unwrap(api.get<ApiResponse<Lead>>(`/leads/slug/${slug}`));
   // },
-
 };

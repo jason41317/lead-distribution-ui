@@ -57,6 +57,7 @@ export default function PublicFormPage() {
       ...data,
       ipAddress: ipAddress,
       formId: form.id,
+      email: data.email.trim().toLowerCase()
     };
     createLead.mutate(leadData, {
       onSuccess: () => {

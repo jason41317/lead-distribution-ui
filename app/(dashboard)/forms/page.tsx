@@ -16,6 +16,7 @@ import {
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/dialog/confirm-dialog";
 import FormToolBar from "@/features/form/components/form-toolbar";
+import { Target } from "lucide-react";
 
 export default function FormPage() {
   const [open, setOpen] = useState(false);
@@ -35,6 +36,10 @@ export default function FormPage() {
   const handleEdit = (form: Form) => {
     setSelectedForm(form);
     setOpen(true);
+  };
+
+  const handlePreview = (form: Form) => {
+    window.open(`/form/${form.slug}`, "__blank")
   };
 
   const handleDelete = (form: Form) => {
@@ -80,6 +85,7 @@ export default function FormPage() {
       <FormTable
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onPreview={handlePreview}
       />
 
       <FormDialog
